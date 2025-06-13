@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adobe Hackathon Mock Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; line-height: 1.6; }
+    .question { background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .options input[type="radio"] { margin-right: 6px; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; padding: 10px; font-family: monospace; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    .score { font-size: 18px; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Adobe India Hackathon - Mock Test</h1>
+  <p>Select your answers. Once selected, you cannot change them.</p>
+
+  <h2>Section 1: MCQs</h2>
+  <div id="mcqs"></div>
+
+  <h2>Section 2: DSA Problem</h2>
+  <div class="question">
+    <strong>Text Link Generator</strong>
+    <p>
+      You’re given a list of <code>N</code> document titles. Your task is to find all the pairs of titles that share at least one common word (case-insensitive, ignoring punctuation), and return them as a list of connected pairs.
+    </p>
+    <p><em>Write your solution below:</em></p>
+    <textarea id="dsaAnswer" placeholder="Write your solution here..."></textarea>
+  </div>
+
+  <button onclick="submitQuiz()">Submit</button>
+  <div class="score" id="score"></div>
+
+  <script>
+    const correctAnswers = {
+      q1: 'C', q2: 'B', q3: 'C', q4: 'C', q5: 'C',
+      q6: 'C', q7: 'B', q8: 'C', q9: 'B', q10: 'C',
+      q11: 'C', q12: 'B', q13: 'D', q14: 'C', q15: 'C'
+    };
+
+    const questions = [
+      ["What is the time complexity of accessing an element in a Python `set`?", ["O(n)", "O(log n)", "O(1)", "O(n log n)"]],
+      ["What does the `git reset --hard HEAD` command do?", ["Discards staged changes", "Restores files to last commit and removes all uncommitted changes", "Only resets working directory", "Deletes the entire Git history"]],
+      ["Which sorting algorithm has the best average-case performance?", ["Selection Sort", "Bubble Sort", "Merge Sort", "Insertion Sort"]],
+      ["In databases, what is normalization?", ["Removing NULLs", "Deleting duplicate records", "Structuring data to reduce redundancy", "Making backups"]],
+      ["What will this code output in Python? `x = [1, 2, 3]; print(x * 2)`", ["[2, 4, 6]", "TypeError", "[1, 2, 3, 1, 2, 3]", "[1, 2, 3, 6]"]],
+      ["If 5x + 3 = 2x + 18, what is x?", ["3", "5", "6", "7"]],
+      ["A man buys an item at ₹240 and sells it for ₹300. What is the profit percentage?", ["20%", "25%", "30%", "40%"]],
+      ["If today is Wednesday, what day will it be 45 days later?", ["Friday", "Saturday", "Sunday", "Monday"]],
+      ["Find the missing number: 2, 6, 12, 20, ?, 42", ["28", "30", "32", "34"]],
+      ["A train 150m long travels at 90 km/h. How long does it take to cross a pole?", ["4s", "5s", "6s", "7s"]],
+      ["Adobe PDF Services API is used for:", ["Sending email via Adobe Cloud", "Real-time collaborative editing", "Programmatic conversion, extraction, and manipulation of PDF files", "Video rendering in After Effects"]],
+      ["What’s a common Adobe product used for Document Signing?", ["Adobe Premiere", "Adobe Sign", "Adobe Animate", "Adobe XD"]],
+      ["In NLP, what does 'Named Entity Recognition' (NER) do?", ["Finds grammar errors", "Identifies unknown words", "Classifies sentences", "Detects proper nouns like names, locations, organizations"]],
+      ["Which cloud architecture pattern does Adobe's Document Cloud likely follow?", ["Peer-to-Peer", "Monolith", "Microservices", "Blockchain"]],
+      ["Which of these is NOT typically used in backend APIs?", ["FastAPI", "Flask", "React", "Django"]]
+    ];
+
+    function lockOption(name) {
+      const radios = document.getElementsByName(name);
+      radios.forEach(radio => {
+        if (!radio.checked) radio.disabled = true;
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+      let resultText = "Adobe Hackathon - Mock Test Result\n\nMCQ Responses:\n";
+
+      for (let i = 1; i <= total; i++) {
+        const qid = `q${i}`;
+        const radios = document.getElementsByName(qid);
+        let selected = "Not Answered";
+
+        for (const radio of radios) {
+          if (radio.checked) {
+            selected = radio.value;
+            if (selected === correctAnswers[qid]) {
+              score++;
+              resultText += `Q${i}: ${selected} (✅ Correct)\n`;
+            } else {
+              resultText += `Q${i}: ${selected} (❌ Incorrect, Correct: ${correctAnswers[qid]})\n`;
+            }
+            break;
+          }
+        }
+        if (selected === "Not Answered") {
+          resultText += `Q${i}: Not Answered\n`;
+        }
+      }
+
+      const dsa = document.getElementById("dsaAnswer").value.trim();
+      resultText += `\nDSA Answer:\n${dsa ? dsa : "[No answer given]"}\n`;
+      resultText += `\nScore: ${score}/${total}`;
+
+      document.getElementById("score").innerText = `Your score: ${score} / ${total}`;
+      downloadResult(resultText);
+      window.open("https://drive.google.com/drive/u/0/folders/1yK87PLLX_8c0M4LpB6ZiYCZhJvsXhXCI", "_blank");
+    }
+
+    function downloadResult(content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'adobe-mock-result.txt';
+      a.click();
+    }
+
+    function loadQuestions() {
+      const mcqContainer = document.getElementById("mcqs");
+      questions.forEach((q, i) => {
+        const qNum = i + 1;
+        const [text, opts] = q;
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<strong>${qNum}. ${text}</strong><br>` +
+          opts.map((opt, j) => {
+            const label = String.fromCharCode(65 + j);
+            return `<label><input type="radio" name="q${qNum}" value="${label}" onclick='lockOption("q${qNum}")'> ${label}. ${opt}</label><br>`;
+          }).join("");
+        mcqContainer.appendChild(div);
+      });
+    }
+
+    window.onload = loadQuestions;
+  </script>
+</body>
+</html>
