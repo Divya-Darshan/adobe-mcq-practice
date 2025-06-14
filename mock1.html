@@ -74,8 +74,9 @@
         const qid = `q${i}`;
         const radios = document.getElementsByName(qid);
         let selected = "Not Answered";
-
-        for (const radio of radios) {
+  
+        for (const radio of radios) 
+      {
           if (radio.checked) {
             selected = radio.value;
             if (selected === correctAnswers[qid]) {
