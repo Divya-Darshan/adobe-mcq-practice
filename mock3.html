@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adobe Hackathon Mock Test 3</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; line-height: 1.6; }
+    .question { background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .options input[type="radio"] { margin-right: 6px; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; padding: 10px; font-family: monospace; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    .score { font-size: 18px; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Adobe India Hackathon - Mock Test 3</h1>
+  <p>Select your answers. Once selected, you cannot change them.</p>
+
+  <h2>Section 1: MCQs</h2>
+  <div id="mcqs"></div>
+
+  <h2>Section 2: DSA Problem</h2>
+  <div class="question">
+    <strong>Find All Anagrams in a String</strong>
+    <p>
+      You are given two strings <code>s</code> and <code>p</code>. Return all the <b>start indices</b> of <code>p</code>'s anagrams in <code>s</code>.
+    </p>
+    <p><strong>Example:</strong><br>
+      Input: <code>s = "cbaebabacd", p = "abc"</code><br>
+      Output: <code>[0, 6]</code>
+    </p>
+    <p><em>Write your solution below:</em></p>
+    <textarea id="dsaAnswer" placeholder="function findAnagrams(s, p) { ... }"></textarea>
+  </div>
+
+  <button onclick="submitQuiz()">Submit</button>
+  <div class="score" id="score"></div>
+
+  <script>
+    const correctAnswers = {
+      q1: 'C', q2: 'A', q3: 'D', q4: 'A', q5: 'B',
+      q6: 'C', q7: 'B', q8: 'A', q9: 'C', q10: 'B',
+      q11: 'B', q12: 'A', q13: 'B', q14: 'C', q15: 'B'
+    };
+
+    const questions = [
+      ["Which keyword is used to create a class in Python?", ["def", "function", "class", "object"]],
+      ["What is the default port number for HTTP?", ["80", "443", "21", "25"]],
+      ["Which of the following is NOT a JavaScript framework?", ["React", "Angular", "Vue", "Django"]],
+      ["Which HTML tag is used to define an internal style sheet?", ["<style>", "<css>", "<script>", "<link>"]],
+      ["What is the value of `true + true` in JavaScript?", ["true", "2", "1", "NaN"]],
+      ["Which company developed the TypeScript language?", ["Google", "Facebook", "Microsoft", "Apple"]],
+      ["In SQL, which keyword is used to combine rows from two or more tables?", ["COMBINE", "JOIN", "MERGE", "LINK"]],
+      ["What does API stand for?", ["Application Programming Interface", "Automatic Program Input", "Advanced Processing Interface", "Application Processing Instruction"]],
+      ["Which command in Git shows the commit history?", ["git commit", "git status", "git log", "git history"]],
+      ["Which CSS property controls the text size?", ["font-style", "font-size", "text-style", "text-align"]],
+      ["What is the result of `4 === '4'` in JavaScript?", ["true", "false", "undefined", "NaN"]],
+      ["Which file contains the project dependencies in Node.js?", ["package.json", "dependencies.txt", "node.config", "server.js"]],
+      ["What does the Python `range(5)` generate?", ["[1,2,3,4,5]", "[0,1,2,3,4]", "[0,2,4,6,8]", "[1,3,5,7,9]"]],
+      ["Which tool is used for version control?", ["Docker", "Webpack", "Git", "NPM"]],
+      ["Which is used to define a constant in JavaScript?", ["let", "const", "var", "define"]]
+    ];
+
+    function lockOption(name) {
+      const radios = document.getElementsByName(name);
+      radios.forEach(radio => {
+        if (!radio.checked) radio.disabled = true;
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+      let resultText = "Adobe Hackathon - Mock Test 3 Results\n\nMCQ Responses:\n";
+
+      for (let i = 1; i <= total; i++) {
+        const qid = `q${i}`;
+        const radios = document.getElementsByName(qid);
+        let selected = "Not Answered";
+
+        for (const radio of radios) {
+          if (radio.checked) {
+            selected = radio.value;
+            if (selected === correctAnswers[qid]) {
+              score++;
+              resultText += `Q${i}: ${selected} (✅ Correct)\n`;
+            } else {
+              resultText += `Q${i}: ${selected} (❌ Incorrect, Correct: ${correctAnswers[qid]})\n`;
+            }
+            break;
+          }
+        }
+        if (selected === "Not Answered") {
+          resultText += `Q${i}: Not Answered\n`;
+        }
+      }
+
+      const dsa = document.getElementById("dsaAnswer").value.trim();
+      const dsaKey = `
+function findAnagrams(s, p) {
+  const res = [];
+  const pCount = new Array(26).fill(0);
+  const sCount = new Array(26).fill(0);
+  const a = 'a'.charCodeAt(0);
+
+  for (const ch of p) {
+    pCount[ch.charCodeAt(0) - a]++;
+  }
+
+  for (let i = 0; i < s.length; i++) {
+    sCount[s.charCodeAt(i) - a]++;
+    if (i >= p.length) {
+      sCount[s.charCodeAt(i - p.length) - a]--;
+    }
+    if (sCount.join() === pCount.join()) {
+      res.push(i - p.length + 1);
+    }
+  }
+  return res;
+}
+`;
+
+      resultText += `\nDSA Answer Submitted:\n${dsa ? dsa : "[No answer given]"}\n`;
+      resultText += `\nExpected Correct DSA Solution:\n${dsaKey}\n`;
+      resultText += `\nScore: ${score}/${total}`;
+
+      document.getElementById("score").innerText = `Your score: ${score} / ${total}`;
+      downloadResult(resultText);
+      window.open("https://drive.google.com/drive/u/0/folders/1yK87PLLX_8c0M4LpB6ZiYCZhJvsXhXCI", "_blank");
+    }
+
+    function downloadResult(content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'adobe-mock3-result.txt';
+      a.click();
+    }
+
+    function loadQuestions() {
+      const mcqContainer = document.getElementById("mcqs");
+      questions.forEach((q, i) => {
+        const qNum = i + 1;
+        const [text, opts] = q;
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<strong>${qNum}. ${text}</strong><br>` +
+          opts.map((opt, j) => {
+            const label = String.fromCharCode(65 + j);
+            return `<label><input type="radio" name="q${qNum}" value="${label}" onclick='lockOption("q${qNum}")'> ${label}. ${opt}</label><br>`;
+          }).join("");
+        mcqContainer.appendChild(div);
+      });
+    }
+
+    window.onload = loadQuestions;
+  </script>
+</body>
+</html>
