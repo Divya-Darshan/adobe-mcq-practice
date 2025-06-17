@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adobe Hackathon Mock Test 5</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; line-height: 1.6; }
+    .question { background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .options input[type="radio"] { margin-right: 6px; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; padding: 10px; font-family: monospace; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    .score { font-size: 18px; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Adobe India Hackathon - Mock Test 5</h1>
+  <p>Select your answers. Once selected, you cannot change them.</p>
+
+  <h2>Section 1: MCQs</h2>
+  <div id="mcqs"></div>
+
+  <h2>Section 2: DSA Problem</h2>
+  <div class="question">
+    <strong>Majority Element</strong>
+    <p>
+      Given an array of integers, return the element that appears more than n/2 times. If no such element exists, return -1.
+    </p>
+    <p><strong>Example:</strong> Input: <code>[3,3,4,2,4,4,2,4,4]</code> → Output: <code>4</code></p>
+    <p><em>Write your solution below:</em></p>
+    <textarea id="dsaAnswer" placeholder="function findMajority(arr) { ... }"></textarea>
+  </div>
+
+  <button onclick="submitQuiz()">Submit</button>
+  <div class="score" id="score"></div>
+
+  <script>
+    const correctAnswers = {
+      q1: 'C', q2: 'B', q3: 'D', q4: 'A', q5: 'C',
+      q6: 'D', q7: 'C', q8: 'A', q9: 'B', q10: 'A',
+      q11: 'D', q12: 'B', q13: 'C', q14: 'A', q15: 'D'
+    };
+
+    const questions = [
+      ["Which tag is used to create a hyperlink in HTML?", ["&lt;link&gt;", "&lt;a href&gt;", "&lt;a&gt;", "&lt;hyper&gt;"]],
+      ["Which symbol is used for comments in JavaScript?", ["// or /* */", "# or //", "<!-- -->", "--"]],
+      ["Which method adds a new element at the end of an array in JavaScript?", ["pushLast()", "add()", "insertEnd()", "push()"]],
+      ["Which keyword is used to stop a loop in JavaScript?", ["break", "stop", "exit", "return"]],
+      ["What does NaN stand for in JavaScript?", ["Not a NumberType", "Not available Now", "Not a Number", "Null and None"]],
+      ["Which property is used to hide an element in CSS?", ["invisible: true;", "display: hide;", "visibility: none;", "display: none;"]],
+      ["What will `typeof undefined` return?", ["null", "object", "undefined", "NaN"]],
+      ["Which method removes the last element from an array?", ["pop()", "remove()", "deleteLast()", "splice()"]],
+      ["Which method is used to round a number in JavaScript?", ["Math.round()", "round()", "toRound()", "Math.floorRound()"]],
+      ["Which keyword is used to declare a constant in JavaScript?", ["const", "let", "var", "constant"]],
+      ["In Python, what is the output of: `bool(0)`?", ["1", "0", "Error", "False"]],
+      ["Which function converts a string to an integer in Python?", ["toInt()", "int()", "parseInt()", "strToInt()"]],
+      ["Which HTML element is used for inserting line breaks?", ["&lt;line&gt;", "&lt;break&gt;", "&lt;br&gt;", "&lt;lb&gt;"]],
+      ["What is the purpose of Git?", ["Version control", "Code hosting", "Bug fixing", "Code compiling"]],
+      ["Which HTTP status code means 'Not Found'?", ["200", "500", "403", "404"]]
+    ];
+
+    function lockOption(name) {
+      const radios = document.getElementsByName(name);
+      radios.forEach(radio => {
+        if (!radio.checked) radio.disabled = true;
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+      let resultText = "Adobe Hackathon - Mock Test 5 Results\n\nMCQ Responses:\n";
+
+      for (let i = 1; i <= total; i++) {
+        const qid = `q${i}`;
+        const radios = document.getElementsByName(qid);
+        let selected = "Not Answered";
+
+        for (const radio of radios) {
+          if (radio.checked) {
+            selected = radio.value;
+            if (selected === correctAnswers[qid]) {
+              score++;
+              resultText += `Q${i}: ${selected} (✅ Correct)\n`;
+            } else {
+              resultText += `Q${i}: ${selected} (❌ Incorrect, Correct: ${correctAnswers[qid]})\n`;
+            }
+            break;
+          }
+        }
+        if (selected === "Not Answered") {
+          resultText += `Q${i}: Not Answered\n`;
+        }
+      }
+
+      const dsa = document.getElementById("dsaAnswer").value.trim();
+      const dsaKey = `
+function findMajority(arr) {
+  let count = 0, candidate = null;
+  for (let num of arr) {
+    if (count === 0) candidate = num;
+    count += (num === candidate) ? 1 : -1;
+  }
+  count = 0;
+  for (let num of arr) {
+    if (num === candidate) count++;
+  }
+  return count > Math.floor(arr.length / 2) ? candidate : -1;
+}`;
+
+      resultText += `\nDSA Answer Submitted:\n${dsa ? dsa : "[No answer given]"}\n`;
+      resultText += `\nExpected Correct DSA Solution:\n${dsaKey}\n`;
+      resultText += `\nScore: ${score}/${total}`;
+
+      document.getElementById("score").innerText = `Your score: ${score} / ${total}`;
+      downloadResult(resultText);
+    }
+
+    function downloadResult(content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'adobe-mock5-result.txt';
+      a.click();
+      window.location.href = 'https://drive.google.com/drive/u/0/folders/1yK87PLLX_8c0M4LpB6ZiYCZhJvsXhXCI'
+    }
+
+    function loadQuestions() {
+      const mcqContainer = document.getElementById("mcqs");
+      questions.forEach((q, i) => {
+        const qNum = i + 1;
+        const [text, opts] = q;
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<strong>${qNum}. ${text}</strong><br>` +
+          opts.map((opt, j) => {
+            const label = String.fromCharCode(65 + j);
+            return `<label><input type="radio" name="q${qNum}" value="${label}" onclick='lockOption("q${qNum}")'> ${label}. ${opt}</label><br>`;
+          }).join("");
+        mcqContainer.appendChild(div);
+      });
+    }
+
+    window.onload = loadQuestions;
+  </script>
+</body>
+</html>
