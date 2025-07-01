@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adobe Hackathon Mock Test 10</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; line-height: 1.6; }
+    .question { background: #f0f0f0; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .options input[type="radio"] { margin-right: 6px; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; padding: 10px; font-family: monospace; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    .score { font-size: 18px; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Adobe India Hackathon - Mock Test 10</h1>
+  <p>Select your answers. Once selected, they will be locked.</p>
+
+  <h2>Section 1: MCQs</h2>
+  <div id="mcqs"></div>
+
+  <h2>Section 2: DSA Problem</h2>
+  <div class="question">
+    <strong>First Non-Repeating Character</strong>
+    <p>
+      Given a string, return the index of the first non-repeating character. If there is none, return -1.
+    </p>
+    <pre>
+Input: "leetcode"
+Output: 0
+
+Input: "aabb"
+Output: -1</pre>
+    <p><em>Write your solution below:</em></p>
+    <textarea id="dsaAnswer" placeholder="function firstUniqChar(s) { ... }"></textarea>
+  </div>
+
+  <button onclick="submitQuiz()">Submit</button>
+  <div class="score" id="score"></div>
+
+  <script>
+    const correctAnswers = {
+      q1: 'B', q2: 'C', q3: 'A', q4: 'D', q5: 'C',
+      q6: 'A', q7: 'D', q8: 'B', q9: 'A', q10: 'C',
+      q11: 'C', q12: 'D', q13: 'B', q14: 'A', q15: 'C'
+    };
+
+    const questions = [
+      ["What does DOM stand for in web development?", ["Document Option Model", "Document Object Model", "Data Object Mode", "Display Output Mode"]],
+      ["What will `typeof NaN` return in JavaScript?", ["number", "undefined", "NaN", "object"]],
+      ["Which function is used to serialize an object into a JSON string in JavaScript?", ["JSON.stringify()", "JSON.parse()", "JSON.encode()", "stringifyJSON()"]],
+      ["Which SQL clause is used to filter the results of a query?", ["ORDER BY", "GROUP BY", "FROM", "WHERE"]],
+      ["Which HTTP method is typically idempotent?", ["POST", "CONNECT", "GET", "PATCH"]],
+      ["What is the result of `4 + '5'` in JavaScript?", ["'45'", "9", "Error", "undefined"]],
+      ["Which CSS property controls the text size?", ["font-weight", "text-align", "line-height", "font-size"]],
+      ["Which Python data type is immutable?", ["list", "tuple", "set", "dictionary"]],
+      ["What is the output of `print(bool(0))` in Python?", ["False", "True", "0", "None"]],
+      ["What does SQL stand for?", ["Structured Question Language", "Simple Query Language", "Structured Query Language", "Sequential Query Logic"]],
+      ["Which keyword is used to define a function in JavaScript?", ["function()", "method()", "func", "define"]],
+      ["Which command is used to initialize a git repository?", ["git start", "git create", "git init", "git begin"]],
+      ["Which unit is NOT relative in CSS?", ["em", "px", "%", "rem"]],
+      ["What does HTTP stand for?", ["HyperText Transfer Protocol", "HighText Transfer Process", "HyperTool Transfer Protocol", "HyperText Tool Protocol"]],
+      ["Which HTML tag is used to display a checkbox?", ["<input type='checkbox'>", "<checkbox>", "<check>", "<box>"]]
+    ];
+
+    function lockOption(name) {
+      const radios = document.getElementsByName(name);
+      radios.forEach(radio => {
+        if (!radio.checked) radio.disabled = true;
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+      let resultText = "Adobe Hackathon - Mock Test 10 Results\n\nMCQ Responses:\n";
+
+      for (let i = 1; i <= total; i++) {
+        const qid = `q${i}`;
+        const radios = document.getElementsByName(qid);
+        let selected = "Not Answered";
+
+        for (const radio of radios) {
+          if (radio.checked) {
+            selected = radio.value;
+            if (selected === correctAnswers[qid]) {
+              score++;
+              resultText += `Q${i}: ${selected} (✅ Correct)\n`;
+            } else {
+              resultText += `Q${i}: ${selected} (❌ Incorrect, Correct: ${correctAnswers[qid]})\n`;
+            }
+            break;
+          }
+        }
+        if (selected === "Not Answered") {
+          resultText += `Q${i}: Not Answered\n`;
+        }
+      }
+
+      const dsa = document.getElementById("dsaAnswer").value.trim();
+      const dsaKey = `
+function firstUniqChar(s) {
+  const count = {};
+  for (let char of s) count[char] = (count[char] || 0) + 1;
+  for (let i = 0; i < s.length; i++) {
+    if (count[s[i]] === 1) return i;
+  }
+  return -1;
+}`;
+
+      resultText += `\nDSA Answer Submitted:\n${dsa ? dsa : "[No answer given]"}\n`;
+      resultText += `\nExpected Correct DSA Solution:\n${dsaKey}\n`;
+      resultText += `\nScore: ${score}/${total}`;
+
+      document.getElementById("score").innerText = `Your score: ${score} / ${total}`;
+      downloadResult(resultText);
+    }
+
+    function downloadResult(content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'adobe-mock10-result.txt';
+      a.click();
+    }
+
+    function loadQuestions() {
+      const mcqContainer = document.getElementById("mcqs");
+      questions.forEach((q, i) => {
+        const qNum = i + 1;
+        const [text, opts] = q;
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<strong>${qNum}. ${text}</strong><br>` +
+          opts.map((opt, j) => {
+            const label = String.fromCharCode(65 + j);
+            return `<label><input type="radio" name="q${qNum}" value="${label}" onclick='lockOption("q${qNum}")'> ${label}. ${opt}</label><br>`;
+          }).join("");
+        mcqContainer.appendChild(div);
+      });
+    }
+
+    window.onload = loadQuestions;
+  </script>
+</body>
+</html>

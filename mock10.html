@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adobe Hackathon Mock Test 11</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; line-height: 1.6; }
+    .question { background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .options input[type="radio"] { margin-right: 6px; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; padding: 10px; font-family: monospace; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    .score { font-size: 18px; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Adobe India Hackathon - Mock Test 11</h1>
+  <p>Select your answers. Once selected, you cannot change them.</p>
+
+  <h2>Section 1: MCQs</h2>
+  <div id="mcqs"></div>
+
+  <h2>Section 2: DSA Problem</h2>
+  <div class="question">
+    <strong>Sliding Window Maximum</strong>
+    <p>
+      Given an array of integers and a window size <code>k</code>, find the maximum element in every contiguous subarray of size <code>k</code>.
+    </p>
+    <pre>
+Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+Output: [3,3,5,5,6,7]</pre>
+    <p><em>Write your solution below:</em></p>
+    <textarea id="dsaAnswer" placeholder="function maxSlidingWindow(nums, k) { ... }"></textarea>
+  </div>
+
+  <button onclick="submitQuiz()">Submit</button>
+  <div class="score" id="score"></div>
+
+  <script>
+    const correctAnswers = {
+      q1: 'A', q2: 'D', q3: 'B', q4: 'A', q5: 'C',
+      q6: 'D', q7: 'C', q8: 'B', q9: 'D', q10: 'A',
+      q11: 'B', q12: 'A', q13: 'C', q14: 'D', q15: 'B'
+    };
+
+    const questions = [
+      ["Which data structure uses FIFO?", ["Queue", "Stack", "Tree", "Graph"]],
+      ["Which is NOT a primitive data type in Java?", ["int", "float", "char", "String"]],
+      ["What does SQL stand for?", ["Sequential Query Language", "Structured Query Language", "Server Query List", "Structured Questions List"]],
+      ["Which HTML attribute specifies an alternate text for an image?", ["alt", "title", "src", "href"]],
+      ["Which of these is not a CSS unit?", ["em", "px", "kg", "%"]],
+      ["Which of these algorithms is used in Dijkstra's Algorithm?", ["DFS", "BFS", "Backtracking", "Greedy"]],
+      ["What does JSON stand for?", ["Java Syntax Object Notation", "JavaScript Online Notation", "JavaScript Object Notation", "Joined Syntax Object Notation"]],
+      ["Which tag is used for JavaScript inclusion in HTML?", ["<java>", "<script>", "<js>", "<link>"]],
+      ["What is the output of 'typeof NaN' in JavaScript?", ["number", "NaN", "undefined", "number"]],
+      ["What is used to uniquely identify elements in a database table?", ["Primary key", "Foreign key", "Secondary key", "Index"]],
+      ["Which protocol does HTTPS use?", ["FTP", "SSL/TLS", "SMTP", "HTTP"]],
+      ["Which function is used to convert a string to an integer in C?", ["atoi()", "string()", "int()", "parse()"]],
+      ["Which company developed the Python language?", ["IBM", "Google", "CWI", "Apple"]],
+      ["Which HTML tag is used to define a hyperlink?", ["<link>", "<a>", "<url>", "<href>"]],
+      ["What does CSS stand for?", ["Creative Style Sheets", "Colorful Style Sheets", "Computer Style Sheets", "Cascading Style Sheets"]]
+    ];
+
+    function lockOption(name) {
+      const radios = document.getElementsByName(name);
+      radios.forEach(radio => {
+        if (!radio.checked) radio.disabled = true;
+      });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+      let resultText = "Adobe Hackathon - Mock Test 11 Results\n\nMCQ Responses:\n";
+
+      for (let i = 1; i <= total; i++) {
+        const qid = `q${i}`;
+        const radios = document.getElementsByName(qid);
+        let selected = "Not Answered";
+
+        for (const radio of radios) {
+          if (radio.checked) {
+            selected = radio.value;
+            if (selected === correctAnswers[qid]) {
+              score++;
+              resultText += `Q${i}: ${selected} (✅ Correct)\n`;
+            } else {
+              resultText += `Q${i}: ${selected} (❌ Incorrect, Correct: ${correctAnswers[qid]})\n`;
+            }
+            break;
+          }
+        }
+        if (selected === "Not Answered") {
+          resultText += `Q${i}: Not Answered\n`;
+        }
+      }
+
+      const dsa = document.getElementById("dsaAnswer").value.trim();
+      const dsaKey = `
+function maxSlidingWindow(nums, k) {
+  const deque = [], result = [];
+  for (let i = 0; i < nums.length; i++) {
+    while (deque.length && deque[0] <= i - k) deque.shift();
+    while (deque.length && nums[deque[deque.length - 1]] < nums[i]) deque.pop();
+    deque.push(i);
+    if (i >= k - 1) result.push(nums[deque[0]]);
+  }
+  return result;
+}`;
+
+      resultText += `\nDSA Answer Submitted:\n${dsa ? dsa : "[No answer given]"}\n`;
+      resultText += `\nExpected Correct DSA Solution:\n${dsaKey}\n`;
+      resultText += `\nScore: ${score}/${total}`;
+
+      document.getElementById("score").innerText = `Your score: ${score} / ${total}`;
+      downloadResult(resultText);
+      window.open("https://drive.google.com/drive/u/0/folders/1yK87PLLX_8c0M4LpB6ZiYCZhJvsXhXCI", "_blank");
+    }
+
+    function downloadResult(content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'adobe-mock11-result.txt';
+      a.click();
+    }
+
+    function loadQuestions() {
+      const mcqContainer = document.getElementById("mcqs");
+      questions.forEach((q, i) => {
+        const qNum = i + 1;
+        const [text, opts] = q;
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<strong>${qNum}. ${text}</strong><br>` +
+          opts.map((opt, j) => {
+            const label = String.fromCharCode(65 + j);
+            return `<label><input type="radio" name="q${qNum}" value="${label}" onclick='lockOption("q${qNum}")'> ${label}. ${opt}</label><br>`;
+          }).join("");
+        mcqContainer.appendChild(div);
+      });
+    }
+
+    window.onload = loadQuestions;
+  </script>
+</body>
+</html>
