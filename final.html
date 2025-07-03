@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adobe Hackathon Mock Test 13</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; line-height: 1.6; }
+    .question { background: #f1f1f1; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+    .options input[type="radio"] { margin-right: 6px; }
+    textarea { width: 100%; height: 150px; margin-top: 10px; padding: 10px; font-family: monospace; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; }
+    .score { font-size: 18px; font-weight: bold; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Adobe India Hackathon - Mock Test 13</h1>
+  <p>Select your answers. Once selected, you cannot change them.</p>
+
+  <h2>Section 1: MCQs</h2>
+  <div id="mcqs"></div>
+
+  <h2>Section 2: DSA Problem</h2>
+  <div class="question">
+    <strong>Merge Intervals</strong>
+    <p>
+      You are given an array of intervals where each interval is represented as a pair of integers [start, end]. Merge all overlapping intervals and return a list of the merged intervals sorted by starting time.
+    </p>
+    <pre>
+Input: [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+    </pre>
+    <p><em>Write your Python solution here:</em></p>
+    <textarea id="dsaAnswer" placeholder="def merge_intervals(intervals):\n    # your code here\n    pass"></textarea>
+  </div>
+
+  <button onclick="submitQuiz()">Submit</button>
+  <div class="score" id="score"></div>
+
+  <script>
+    const correctAnswers = {
+      q1: 'B', q2: 'A', q3: 'D', q4: 'C', q5: 'B',
+      q6: 'C', q7: 'A', q8: 'C', q9: 'D', q10: 'C',
+      q11: 'D', q12: 'B', q13: 'A', q14: 'C', q15: 'D'
+    };
+
+    const questions = [
+      ["Which method is used to convert JSON text into a Python dictionary?", ["json.convert()", "json.loads()", "json.import()", "dict.fromJSON()"]],
+      ["Which sorting algorithm is not stable by default?", ["Merge Sort", "Quick Sort", "Bubble Sort", "Insertion Sort"]],
+      ["Which HTML tag is used to link external JavaScript?", ["<js>", "<javascript>", "<link>", "<script>"]],
+      ["Which HTTP method is typically used for updating resources?", ["GET", "HEAD", "PUT", "DELETE"]],
+      ["In Python, what does `set.add(x)` do?", ["Adds at the end", "Adds x to set", "Inserts at index x", "Replaces x"]],
+      ["What does the acronym SQL stand for?", ["Structured Quick Language", "Strong Query Language", "Structured Query Language", "Sorted Question Language"]],
+      ["Which data structure uses FIFO?", ["Stack", "Tree", "HashMap", "Queue"]],
+      ["In Big-O, what’s the time complexity of selection sort?", ["O(log n)", "O(n)", "O(n^2)", "O(n log n)"]],
+      ["Which CSS property changes text color?", ["font-style", "text-weight", "font-color", "color"]],
+      ["What will `len(set([1,1,2,3]))` return?", ["4", "2", "3", "1"]],
+      ["Which module handles command-line arguments in Python?", ["os", "sys", "re", "argparse"]],
+      ["What is the output of: `print(type([]) == list)`?", ["False", "Error", "True", "None"]],
+      ["Which sorting algorithm is typically fastest on average?", ["Selection Sort", "Bubble Sort", "Heap Sort", "Quick Sort"]],
+      ["What does CSS stand for?", ["Creative Style Sheets", "Computer Style Sheets", "Cascading Style Sheets", "Control Style Sheets"]],
+      ["Which one is a frontend framework?", ["Django", "Flask", "React", "FastAPI"]]
+    ];
+
+    function lockOption(name) {
+      const radios = document.getElementsByName(name);
+      radios.forEach(r => { if (!r.checked) r.disabled = true; });
+    }
+
+    function submitQuiz() {
+      let score = 0;
+      let total = Object.keys(correctAnswers).length;
+      let resultText = "Adobe Hackathon - Mock Test 13 Results\n\nMCQ Responses:\n";
+
+      for (let i = 1; i <= total; i++) {
+        const qid = `q${i}`;
+        const radios = document.getElementsByName(qid);
+        let selected = "Not Answered";
+
+        for (const radio of radios) {
+          if (radio.checked) {
+            selected = radio.value;
+            if (selected === correctAnswers[qid]) {
+              score++;
+              resultText += `Q${i}: ${selected} (✅ Correct)\n`;
+            } else {
+              resultText += `Q${i}: ${selected} (❌ Incorrect, Correct: ${correctAnswers[qid]})\n`;
+            }
+            break;
+          }
+        }
+        if (selected === "Not Answered") {
+          resultText += `Q${i}: Not Answered\n`;
+        }
+      }
+
+      const dsa = document.getElementById("dsaAnswer").value.trim();
+      const dsaKey = `
+def merge_intervals(intervals):
+    if not intervals:
+        return []
+    intervals.sort(key=lambda x: x[0])
+    merged = [intervals[0]]
+    for start, end in intervals[1:]:
+        last_end = merged[-1][1]
+        if start <= last_end:
+            merged[-1][1] = max(last_end, end)
+        else:
+            merged.append([start, end])
+    return merged`;
+
+      resultText += `\nDSA Answer Submitted:\n${dsa || "[No answer given]"}\n`;
+      resultText += `\nExpected Correct DSA Solution:\n${dsaKey}\n`;
+      resultText += `\nScore: ${score}/${total}`;
+
+      document.getElementById("score").innerText = `Your score: ${score} / ${total}`;
+      downloadResult(resultText);
+    }
+
+    function downloadResult(content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'adobe-mock13-result.txt';
+      a.click();
+    }
+
+    function loadQuestions() {
+      const mcqContainer = document.getElementById("mcqs");
+      questions.forEach((q, i) => {
+        const qNum = i + 1;
+        const [text, opts] = q;
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<strong>${qNum}. ${text}</strong><br>` +
+          opts.map((opt, j) => {
+            const label = String.fromCharCode(65 + j);
+            return `<label><input type="radio" name="q${qNum}" value="${label}" onclick='lockOption("q${qNum}")'> ${label}. ${opt}</label><br>`;
+          }).join("");
+        mcqContainer.appendChild(div);
+      });
+    }
+
+    window.onload = loadQuestions;
+  </script>
+</body>
+</html>
