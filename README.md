@@ -31,3 +31,4 @@ Each test simulates a real-world Adobe round with score calculation.
    ```bash
    git clone https://github.com/Divya-Darshan/adobe-mcq-practice.git
    cd adobe-mcq-practice
+   start index.html
