@@ -1,50 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCQ</title>
-    <style>
-        body{
-            height: 100px;
-            width: 100px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCQ Dashboard</title>
+  <style>
+    body {
+      font-family: "Poppins", system-ui, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        a{
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            padding: 10px 20px ;
-            background-color: rgb(70, 146, 187);
-            border-radius: 6px;
-            box-shadow: 0 0 20px rgba(111, 110, 110, 0.162);
-        }
-    </style>
+    h1 {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: #ffffff;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      color: #2c3e50;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      background: #2c3e50;
+      color: #ffffff;
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+  </style>
 </head>
 <body>
-    <a href="mock1.html">mock1</a>
-    <br>
-    <a href="mock2.html">mock2</a>
-        <br>
-    <a href="mock3.html">mock3</a>
-            <br>
-    <a href="mock4.html">mock4</a>
-            <br>
-    <a href="mock5.html">mock5</a>
-                <br>
-    <a href="mock6.html">mock6</a>
-                <br>
-    <a href="mock7.html">mock7</a>
-                <br>
-    <a href="mock8.html">mock8</a>
-                    <br>
-    <a href="mock9.html">mock9</a>
-                        <br>
-    <a href="mock10.html">mock10</a>
-                            <br>
+  
+  <div class="grid">
+    <a href="mock1.html">Mock 1</a>
+    <a href="mock2.html">Mock 2</a>
+    <a href="mock3.html">Mock 3</a>
+    <a href="mock4.html">Mock 4</a>
+    <a href="mock5.html">Mock 5</a>
+    <a href="mock6.html">Mock 6</a>
+    <a href="mock7.html">Mock 7</a>
+    <a href="mock8.html">Mock 8</a>
+    <a href="mock9.html">Mock 9</a>
+    <a href="mock10.html">Mock 10</a>
     <a href="final.html">Final</a>
+  </div>
 </body>
 </html>
